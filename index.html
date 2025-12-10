@@ -102,7 +102,7 @@
         }
 
         #themeEditor {
-            display: none; /* hidden by default */
+            display: none;
             margin-top: 20px;
             padding: 10px;
             border: 1px solid #ddd;
@@ -126,16 +126,45 @@
 
         .remove-image {
             position: absolute;
-            top: 0;
-            right: 0;
-            background: red;
+            top: 2px;
+            right: 2px;
+            background: rgba(0,0,0,0.4);
             color: white;
-            font-size: 12px;
+            font-size: 14px;
             border: none;
             cursor: pointer;
             border-radius: 50%;
             width: 20px;
             height: 20px;
+            line-height: 18px;
+            text-align: center;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .remove-image:hover {
+            opacity: 1;
+        }
+
+        /* Subtle file input button */
+        input[type="file"] {
+            padding: 5px;
+            font-size: 0.9em;
+            background-color: #e0e0e0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="file"]::file-selector-button {
+            background-color: #e0e0e0;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        input[type="file"]::file-selector-button:hover {
+            background-color: #d0d0d0;
         }
     </style>
 </head>
@@ -147,7 +176,6 @@
 </header>
 
 <main>
-    <!-- Book Input Form -->
     <h2 id="formTitle">Add a Book</h2>
     <form id="bookForm">
         <input type="text" id="title" placeholder="Book Title" required>
@@ -157,10 +185,9 @@
         <button type="submit">Add Book</button>
     </form>
 
-    <!-- Theme Editor Dropdown (Sticky) -->
     <div id="themeToggleContainer">
         <label id="themeToggle">
-            Show Theme Editor: 
+            Show Theme Editor:
             <select id="themeSelect">
                 <option value="hide">Hide</option>
                 <option value="show">Show</option>
@@ -168,7 +195,6 @@
         </label>
     </div>
 
-    <!-- Theme Editor -->
     <div id="themeEditor">
         <h3>Theme Editor</h3>
         <label>Site Title: <input type="text" id="themeTitle"></label><br>
@@ -177,7 +203,7 @@
         <label>Secondary Color (background): <input type="color" id="themeSecondary"></label><br>
         <label>Text Color: <input type="color" id="themeText"></label><br>
         <label>Header/Footer Color: <input type="color" id="themeHeader"></label><br>
-        <label>Font Family: 
+        <label>Font Family:
             <select id="themeFont">
                 <option value="Arial, sans-serif">Arial</option>
                 <option value="Georgia, serif">Georgia</option>
@@ -188,7 +214,6 @@
         </label>
     </div>
 
-    <!-- Book Table -->
     <table id="bookTable">
         <thead>
         <tr>
@@ -199,9 +224,7 @@
             <th>Actions</th>
         </tr>
         </thead>
-        <tbody>
-        <!-- Books will appear here -->
-        </tbody>
+        <tbody></tbody>
     </table>
 </main>
 
@@ -265,14 +288,14 @@
         }
     }
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', e => {
         e.preventDefault();
-        const title = document.getElementById('title').value;
-        const author = document.getElementById('author').value;
-        const dateRead = document.getElementById('dateRead').value;
-        const notes = document.getElementById('notes').value;
-        const newBook = { title, author, dateRead, notes };
-
+        const newBook = {
+            title: document.getElementById('title').value,
+            author: document.getElementById('author').value,
+            dateRead: document.getElementById('dateRead').value,
+            notes: document.getElementById('notes').value
+        };
         if (editIndex !== null) {
             books[editIndex] = newBook;
             editIndex = null;
@@ -281,7 +304,6 @@
         } else {
             books.push(newBook);
         }
-
         saveBooks();
         form.reset();
     });
@@ -302,7 +324,7 @@
             img.src = src;
             const removeBtn = document.createElement('button');
             removeBtn.className = 'remove-image';
-            removeBtn.innerText = 'x';
+            removeBtn.innerText = '×';
             removeBtn.onclick = () => {
                 images.splice(i, 1);
                 localStorage.setItem(key, JSON.stringify(images));
@@ -317,7 +339,6 @@
     function handleImageUpload(event, key, container) {
         const files = Array.from(event.target.files);
         const images = JSON.parse(localStorage.getItem(key)) || [];
-
         files.forEach(file => {
             const reader = new FileReader();
             reader.onload = () => {
@@ -329,12 +350,8 @@
         });
     }
 
-    document.getElementById('headerUpload').addEventListener('change', e => {
-        handleImageUpload(e, 'headerImages', headerImagesDiv);
-    });
-    document.getElementById('footerUpload').addEventListener('change', e => {
-        handleImageUpload(e, 'footerImages', footerImagesDiv);
-    });
+    document.getElementById('headerUpload').addEventListener('change', e => handleImageUpload(e, 'headerImages', headerImagesDiv));
+    document.getElementById('footerUpload').addEventListener('change', e => handleImageUpload(e, 'footerImages', footerImagesDiv));
 
     loadImages('headerImages', headerImagesDiv);
     loadImages('footerImages', footerImagesDiv);
