@@ -9,10 +9,11 @@
             --secondary-color: #f2f2f2;
             --text-color: #333;
             --header-bg: #f2f2f2;
+            --font-family: Arial, sans-serif;
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: var(--font-family);
             background-color: var(--secondary-color);
             color: var(--text-color);
             margin: 0;
@@ -69,7 +70,7 @@
             margin-top: 20px;
         }
 
-        form input, form textarea {
+        form input, form textarea, form select {
             width: 100%;
             padding: 8px;
             margin: 5px 0;
@@ -103,11 +104,19 @@
 
         .delete-btn { background-color: #e74c3c; }
         .delete-btn:hover { background-color: #c0392b; }
+
+        #themeEditor {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #fafafa;
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>My Book Log</h1>
+        <h1 id="siteTitle">My Book Log</h1>
         <div id="headerImages"></div>
         <input type="file" id="headerUpload" accept="image/*" multiple>
     </header>
@@ -136,6 +145,24 @@
             <textarea id="notes" placeholder="Notes"></textarea>
             <button type="submit">Add Book</button>
         </form>
+
+        <div id="themeEditor">
+            <h3>Theme Editor</h3>
+            <label>Site Title: <input type="text" id="themeTitle"></label><br>
+            <label>Primary Color: <input type="color" id="themePrimary"></label><br>
+            <label>Secondary Color (background): <input type="color" id="themeSecondary"></label><br>
+            <label>Text Color: <input type="color" id="themeText"></label><br>
+            <label>Header/Footer Color: <input type="color" id="themeHeader"></label><br>
+            <label>Font Family: 
+                <select id="themeFont">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="Tahoma, sans-serif">Tahoma</option>
+                    <option value="Courier New, monospace">Courier New</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                </select>
+            </label>
+        </div>
     </main>
 
     <footer>
@@ -258,9 +285,49 @@
             handleImageUpload(e, 'footerImages', footerImagesDiv);
         });
 
-        // Initial load
         loadImages('headerImages', headerImagesDiv);
         loadImages('footerImages', footerImagesDiv);
+
+        // ==== Theme Editor ====
+        const siteTitle = document.getElementById('siteTitle');
+        const themeTitleInput = document.getElementById('themeTitle');
+        const themePrimaryInput = document.getElementById('themePrimary');
+        const themeSecondaryInput = document.getElementById('themeSecondary');
+        const themeTextInput = document.getElementById('themeText');
+        const themeHeaderInput = document.getElementById('themeHeader');
+        const themeFontInput = document.getElementById('themeFont');
+
+        function loadTheme() {
+            const theme = JSON.parse(localStorage.getItem('theme')) || {};
+            if(theme.title) { siteTitle.textContent = theme.title; themeTitleInput.value = theme.title; }
+            if(theme.primaryColor) { document.documentElement.style.setProperty('--primary-color', theme.primaryColor); themePrimaryInput.value = theme.primaryColor; }
+            if(theme.secondaryColor) { document.documentElement.style.setProperty('--secondary-color', theme.secondaryColor); themeSecondaryInput.value = theme.secondaryColor; }
+            if(theme.textColor) { document.documentElement.style.setProperty('--text-color', theme.textColor); themeTextInput.value = theme.textColor; }
+            if(theme.headerColor) { document.documentElement.style.setProperty('--header-bg', theme.headerColor); themeHeaderInput.value = theme.headerColor; }
+            if(theme.fontFamily) { document.documentElement.style.setProperty('--font-family', theme.fontFamily); themeFontInput.value = theme.fontFamily; }
+        }
+
+        function saveTheme() {
+            const theme = {
+                title: themeTitleInput.value,
+                primaryColor: themePrimaryInput.value,
+                secondaryColor: themeSecondaryInput.value,
+                textColor: themeTextInput.value,
+                headerColor: themeHeaderInput.value,
+                fontFamily: themeFontInput.value
+            };
+            localStorage.setItem('theme', JSON.stringify(theme));
+        }
+
+        // Update theme immediately when inputs change
+        themeTitleInput.addEventListener('input', () => { siteTitle.textContent = themeTitleInput.value; saveTheme(); });
+        themePrimaryInput.addEventListener('input', () => { document.documentElement.style.setProperty('--primary-color', themePrimaryInput.value); saveTheme(); });
+        themeSecondaryInput.addEventListener('input', () => { document.documentElement.style.setProperty('--secondary-color', themeSecondaryInput.value); saveTheme(); });
+        themeTextInput.addEventListener('input', () => { document.documentElement.style.setProperty('--text-color', themeTextInput.value); saveTheme(); });
+        themeHeaderInput.addEventListener('input', () => { document.documentElement.style.setProperty('--header-bg', themeHeaderInput.value); saveTheme(); });
+        themeFontInput.addEventListener('change', () => { document.documentElement.style.setProperty('--font-family', themeFontInput.value); saveTheme(); });
+
+        loadTheme();
     </script>
 </body>
 </html>
