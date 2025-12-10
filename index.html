@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Book Log</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f2f2f2;
+            --text-color: #333;
+            --header-bg: #f2f2f2;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header, footer {
+            background-color: var(--header-bg);
+            text-align: center;
+            padding: 20px;
+        }
+
+        header img, footer img {
+            max-width: 150px;
+            margin: 5px;
+            height: auto;
+        }
+
+        h1 {
+            margin: 0;
+            padding: 10px 0;
+            color: var(--primary-color);
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        form input, form textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        form button {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        form button:hover {
+            background-color: #357ABD;
+        }
+
+        .action-btn {
+            margin-right: 5px;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .edit-btn { background-color: #f39c12; }
+        .edit-btn:hover { background-color: #d78b0b; }
+
+        .delete-btn { background-color: #e74c3c; }
+        .delete-btn:hover { background-color: #c0392b; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Book Log</h1>
+        <div id="headerImages"></div>
+        <input type="file" id="headerUpload" accept="image/*" multiple>
+    </header>
+
+    <main>
+        <table id="bookTable">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Date Read</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Books will appear here -->
+            </tbody>
+        </table>
+
+        <form id="bookForm">
+            <h2 id="formTitle">Add a Book</h2>
+            <input type="text" id="title" placeholder="Book Title" required>
+            <input type="text" id="author" placeholder="Author" required>
+            <input type="date" id="dateRead" required>
+            <textarea id="notes" placeholder="Notes"></textarea>
+            <button type="submit">Add Book</button>
+        </form>
+    </main>
+
+    <footer>
+        <div id="footerImages"></div>
+        <input type="file" id="footerUpload" accept="image/*" multiple>
+    </footer>
+
+    <script>
+        // ==== Book Log ====
+        const form = document.getElementById('bookForm');
+        const tableBody = document.querySelector('#bookTable tbody');
+        const formTitle = document.getElementById('formTitle');
+        let books = JSON.parse(localStorage.getItem('books')) || [];
+        let editIndex = null;
+
+        function renderBooks() {
+            tableBody.innerHTML = '';
+            books.forEach((book, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${book.title}</td>
+                    <td>${book.author}</td>
+                    <td>${book.dateRead}</td>
+                    <td>${book.notes}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editBook(${index})">Edit</button>
+                        <button class="action-btn delete-btn" onclick="deleteBook(${index})">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function saveBooks() {
+            localStorage.setItem('books', JSON.stringify(books));
+            renderBooks();
+        }
+
+        function editBook(index) {
+            editIndex = index;
+            const book = books[index];
+            document.getElementById('title').value = book.title;
+            document.getElementById('author').value = book.author;
+            document.getElementById('dateRead').value = book.dateRead;
+            document.getElementById('notes').value = book.notes;
+            formTitle.textContent = 'Edit Book';
+            form.querySelector('button').textContent = 'Save Changes';
+        }
+
+        function deleteBook(index) {
+            if (confirm('Are you sure you want to delete this book?')) {
+                books.splice(index, 1);
+                saveBooks();
+                if (editIndex === index) {
+                    form.reset();
+                    formTitle.textContent = 'Add a Book';
+                    form.querySelector('button').textContent = 'Add Book';
+                    editIndex = null;
+                }
+            }
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            const dateRead = document.getElementById('dateRead').value;
+            const notes = document.getElementById('notes').value;
+            const newBook = { title, author, dateRead, notes };
+
+            if (editIndex !== null) {
+                books[editIndex] = newBook;
+                editIndex = null;
+                formTitle.textContent = 'Add a Book';
+                form.querySelector('button').textContent = 'Add Book';
+            } else {
+                books.push(newBook);
+            }
+
+            saveBooks();
+            form.reset();
+        });
+
+        renderBooks();
+
+        // ==== Header/Footer Images ====
+        const headerImagesDiv = document.getElementById('headerImages');
+        const footerImagesDiv = document.getElementById('footerImages');
+
+        function loadImages(key, container) {
+            const images = JSON.parse(localStorage.getItem(key)) || [];
+            container.innerHTML = '';
+            images.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                container.appendChild(img);
+            });
+        }
+
+        function handleImageUpload(event, key, container) {
+            const files = Array.from(event.target.files);
+            const images = JSON.parse(localStorage.getItem(key)) || [];
+
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    images.push(reader.result);
+                    localStorage.setItem(key, JSON.stringify(images));
+                    loadImages(key, container);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        document.getElementById('headerUpload').addEventListener('change', e => {
+            handleImageUpload(e, 'headerImages', headerImagesDiv);
+        });
+
+        document.getElementById('footerUpload').addEventListener('change', e => {
+            handleImageUpload(e, 'footerImages', footerImagesDiv);
+        });
+
+        // Initial load
+        loadImages('headerImages', headerImagesDiv);
+        loadImages('footerImages', footerImagesDiv);
+    </script>
+</body>
+</html>
