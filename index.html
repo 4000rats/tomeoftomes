@@ -50,6 +50,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
 
         table, th, td {
@@ -70,7 +71,7 @@
             margin-top: 20px;
         }
 
-        form input, form textarea, form select {
+        form input, form textarea, form select, form button {
             width: 100%;
             padding: 8px;
             margin: 5px 0;
@@ -78,7 +79,6 @@
         }
 
         form button {
-            padding: 10px 20px;
             background-color: var(--primary-color);
             color: white;
             border: none;
@@ -106,11 +106,17 @@
         .delete-btn:hover { background-color: #c0392b; }
 
         #themeEditor {
+            display: none; /* hidden by default */
             margin-top: 20px;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 10px;
             background: #fafafa;
+        }
+
+        #themeToggle {
+            margin-top: 10px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -122,21 +128,7 @@
     </header>
 
     <main>
-        <table id="bookTable">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Date Read</th>
-                    <th>Notes</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Books will appear here -->
-            </tbody>
-        </table>
-
+        <!-- Book Input Form -->
         <form id="bookForm">
             <h2 id="formTitle">Add a Book</h2>
             <input type="text" id="title" placeholder="Book Title" required>
@@ -145,6 +137,15 @@
             <textarea id="notes" placeholder="Notes"></textarea>
             <button type="submit">Add Book</button>
         </form>
+
+        <!-- Theme Editor Dropdown -->
+        <label id="themeToggle">
+            Show Theme Editor: 
+            <select id="themeSelect">
+                <option value="hide">Hide</option>
+                <option value="show">Show</option>
+            </select>
+        </label>
 
         <div id="themeEditor">
             <h3>Theme Editor</h3>
@@ -163,6 +164,22 @@
                 </select>
             </label>
         </div>
+
+        <!-- Book Table -->
+        <table id="bookTable">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Date Read</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Books will appear here -->
+            </tbody>
+        </table>
     </main>
 
     <footer>
@@ -296,6 +313,13 @@
         const themeTextInput = document.getElementById('themeText');
         const themeHeaderInput = document.getElementById('themeHeader');
         const themeFontInput = document.getElementById('themeFont');
+        const themeEditorDiv = document.getElementById('themeEditor');
+        const themeSelect = document.getElementById('themeSelect');
+
+        // Show/hide theme editor from dropdown
+        themeSelect.addEventListener('change', () => {
+            themeEditorDiv.style.display = themeSelect.value === 'show' ? 'block' : 'none';
+        });
 
         function loadTheme() {
             const theme = JSON.parse(localStorage.getItem('theme')) || {};
@@ -319,7 +343,6 @@
             localStorage.setItem('theme', JSON.stringify(theme));
         }
 
-        // Update theme immediately when inputs change
         themeTitleInput.addEventListener('input', () => { siteTitle.textContent = themeTitleInput.value; saveTheme(); });
         themePrimaryInput.addEventListener('input', () => { document.documentElement.style.setProperty('--primary-color', themePrimaryInput.value); saveTheme(); });
         themeSecondaryInput.addEventListener('input', () => { document.documentElement.style.setProperty('--secondary-color', themeSecondaryInput.value); saveTheme(); });
