@@ -1,175 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>My Book Log</title>
-    <style>
-        :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f2f2f2;
-            --text-color: #333;
-            --header-bg: #f2f2f2;
-            --font-family: Arial, sans-serif;
-        }
+<meta charset="UTF-8">
+<title>Tome of Tomes</title>
+<style>
+    :root {
+        --primary-color: #4a90e2;
+        --secondary-color: #f2f2f2;
+        --text-color: #333;
+        --header-bg: #f2f2f2;
+        --font-family: Arial, sans-serif;
+    }
 
-        body {
-            font-family: var(--font-family);
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-        }
+    body {
+        font-family: var(--font-family);
+        background-color: var(--secondary-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+    }
 
-        header {
-            background-color: var(--header-bg);
-            text-align: center;
-            padding: 20px;
-        }
+    header {
+        background-color: var(--header-bg);
+        text-align: center;
+        padding: 20px;
+    }
 
-        h1 {
-            margin: 0;
-            padding: 10px 0;
-            color: var(--primary-color);
-        }
+    h1 {
+        margin: 0;
+        padding: 10px 0;
+        color: var(--primary-color);
+    }
 
-        main {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 10px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
+    main {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 10px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
 
-        table, th, td {
-            border: 1px solid #ddd;
-        }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
 
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
 
-        th {
-            background-color: var(--primary-color);
-            color: white;
-        }
+    th {
+        background-color: var(--primary-color);
+        color: white;
+    }
 
-        form {
-            margin-top: 20px;
-        }
+    form {
+        margin-top: 20px;
+    }
 
-        form input, form textarea, form select, form button {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-            box-sizing: border-box;
-        }
+    form input, form textarea, form select, form button {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0;
+        box-sizing: border-box;
+    }
 
-        form button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin-top: 5px;
-        }
+    form button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin-top: 5px;
+    }
 
-        form button:hover {
-            background-color: #357ABD;
-        }
+    form button:hover {
+        background-color: #357ABD;
+    }
 
-        .action-link {
-            cursor: pointer;
-            color: var(--primary-color);
-            text-decoration: underline;
-            margin-right: 10px;
-            background: none;
-            border: none;
-            padding: 0;
-            font-size: 1em;
-        }
+    .action-link {
+        cursor: pointer;
+        color: var(--primary-color);
+        text-decoration: underline;
+        margin-right: 10px;
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: 1em;
+    }
 
-        #themeEditor {
-            display: none;
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background: #fafafa;
-        }
+    #themeEditor {
+        display: none;
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background: #fafafa;
+    }
 
-        #themeToggleContainer {
-            position: sticky;
-            top: 10px;
-            background: white;
-            padding: 5px 0;
-            z-index: 100;
-        }
+    #themeToggleContainer {
+        position: sticky;
+        top: 10px;
+        background: white;
+        padding: 5px 0;
+        z-index: 100;
+    }
 
-        .image-container {
-            display: inline-block;
-            position: relative;
-            margin: 5px;
-        }
+    .image-container {
+        display: inline-block;
+        position: relative;
+        margin: 5px;
+    }
 
-        .remove-image {
-            position: absolute;
-            top: 2px;
-            right: 2px;
-            background: rgba(0,0,0,0.4);
-            color: white;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            line-height: 18px;
-            text-align: center;
-            opacity: 0.7;
-            transition: opacity 0.2s;
-        }
+    .remove-image {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        background: rgba(0,0,0,0.4);
+        color: white;
+        font-size: 14px;
+        border: none;
+        cursor: pointer;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        line-height: 18px;
+        text-align: center;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
 
-        .remove-image:hover {
-            opacity: 1;
-        }
+    .remove-image:hover {
+        opacity: 1;
+    }
 
-        /* Subtle file input buttons */
-        input[type="file"] {
-            display: inline-block;
-            padding: 6px 12px;
-            cursor: pointer;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f5f5f5;
-            color: #333;
-            font-size: 0.9em;
-        }
+    /* Default file input buttons with hidden filename */
+    input[type="file"] {
+        position: relative;
+        overflow: hidden;
+    }
+    input[type="file"]::file-selector-button {
+        cursor: pointer;
+    }
+    /* Hide the filename/text */
+    input[type="file"]::-webkit-file-upload-button {
+        visibility: visible;
+    }
+    input[type="file"]::file-selector-button {
+        visibility: visible;
+    }
+    input[type="file"]::-ms-value {
+        color: transparent;
+    }
 
-        input[type="file"]::-webkit-file-upload-button {
-            visibility: hidden;
-        }
-        input[type="file"]::file-selector-button {
-            visibility: hidden;
-        }
+    header img, footer img {
+        max-width: 150px;
+        margin: 5px;
+    }
 
-        header img, footer img {
-            max-width: 150px;
-            margin: 5px;
-        }
-
-        footer {
-            background-color: var(--header-bg);
-            text-align: center;
-            padding: 20px;
-        }
-    </style>
+    footer {
+        background-color: var(--header-bg);
+        text-align: center;
+        padding: 20px;
+    }
+</style>
 </head>
 <body>
 <header>
@@ -246,7 +246,6 @@
 
     function renderBooks() {
         tableBody.innerHTML = '';
-        // Show newest books first
         [...books].reverse().forEach((book, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -349,7 +348,7 @@
             };
             reader.readAsDataURL(file);
         });
-        event.target.value = '';
+        event.target.value = ''; // prevent "No file selected"
     }
 
     const headerImagesDiv = document.getElementById('headerImages');
