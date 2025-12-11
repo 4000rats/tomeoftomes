@@ -140,8 +140,23 @@
             opacity: 1;
         }
 
+        /* Subtle file input buttons */
         input[type="file"] {
+            display: inline-block;
+            padding: 6px 12px;
             cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        input[type="file"]::-webkit-file-upload-button {
+            visibility: hidden;
+        }
+        input[type="file"]::file-selector-button {
+            visibility: hidden;
         }
 
         header img, footer img {
@@ -231,7 +246,8 @@
 
     function renderBooks() {
         tableBody.innerHTML = '';
-        books.forEach((book, index) => {
+        // Show newest books first
+        [...books].reverse().forEach((book, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${book.title}</td>
@@ -239,8 +255,8 @@
                 <td>${book.dateRead}</td>
                 <td>${book.notes}</td>
                 <td>
-                    <button class="action-link" onclick="editBook(${index})">Edit</button>
-                    <button class="action-link" onclick="deleteBook(${index})">Delete</button>
+                    <button class="action-link" onclick="editBook(${books.length - 1 - index})">Edit</button>
+                    <button class="action-link" onclick="deleteBook(${books.length - 1 - index})">Delete</button>
                 </td>
             `;
             tableBody.appendChild(row);
