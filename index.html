@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Tome of Tomes</title>
+<title>My Book Log</title>
 <style>
     :root {
         --primary-color: #4a90e2;
@@ -10,6 +10,7 @@
         --text-color: #333;
         --header-bg: #f2f2f2;
         --font-family: Arial, sans-serif;
+        --file-text-color: transparent;
     }
 
     body {
@@ -140,23 +141,9 @@
         opacity: 1;
     }
 
-    /* Default file input buttons with hidden filename */
+    /* File input default style with customizable "No files selected" text color */
     input[type="file"] {
-        position: relative;
-        overflow: hidden;
-    }
-    input[type="file"]::file-selector-button {
-        cursor: pointer;
-    }
-    /* Hide the filename/text */
-    input[type="file"]::-webkit-file-upload-button {
-        visibility: visible;
-    }
-    input[type="file"]::file-selector-button {
-        visibility: visible;
-    }
-    input[type="file"]::-ms-value {
-        color: transparent;
+        color: var(--file-text-color);
     }
 
     header img, footer img {
@@ -214,7 +201,8 @@
                 <option value="Courier New, monospace">Courier New</option>
                 <option value="Verdana, sans-serif">Verdana</option>
             </select>
-        </label>
+        </label><br>
+        <label>File Input Text Color: <input type="color" id="themeFileTextColor"></label>
     </div>
 
     <table id="bookTable">
@@ -369,6 +357,7 @@
     const themeTextInput = document.getElementById('themeText');
     const themeHeaderInput = document.getElementById('themeHeader');
     const themeFontInput = document.getElementById('themeFont');
+    const themeFileTextColorInput = document.getElementById('themeFileTextColor');
     const themeEditorDiv = document.getElementById('themeEditor');
     const themeSelect = document.getElementById('themeSelect');
 
@@ -385,6 +374,7 @@
         if(theme.textColor) { document.documentElement.style.setProperty('--text-color', theme.textColor); themeTextInput.value = theme.textColor; }
         if(theme.headerColor) { document.documentElement.style.setProperty('--header-bg', theme.headerColor); themeHeaderInput.value = theme.headerColor; }
         if(theme.fontFamily) { document.documentElement.style.setProperty('--font-family', theme.fontFamily); themeFontInput.value = theme.fontFamily; }
+        if(theme.fileTextColor) { document.documentElement.style.setProperty('--file-text-color', theme.fileTextColor); themeFileTextColorInput.value = theme.fileTextColor; }
     }
 
     function saveTheme() {
@@ -395,7 +385,8 @@
             secondaryColor: themeSecondaryInput.value,
             textColor: themeTextInput.value,
             headerColor: themeHeaderInput.value,
-            fontFamily: themeFontInput.value
+            fontFamily: themeFontInput.value,
+            fileTextColor: themeFileTextColorInput.value
         };
         localStorage.setItem('theme', JSON.stringify(theme));
     }
@@ -407,6 +398,7 @@
     themeTextInput.addEventListener('input', () => { document.documentElement.style.setProperty('--text-color', themeTextInput.value); saveTheme(); });
     themeHeaderInput.addEventListener('input', () => { document.documentElement.style.setProperty('--header-bg', themeHeaderInput.value); saveTheme(); });
     themeFontInput.addEventListener('change', () => { document.documentElement.style.setProperty('--font-family', themeFontInput.value); saveTheme(); });
+    themeFileTextColorInput.addEventListener('input', () => { document.documentElement.style.setProperty('--file-text-color', themeFileTextColorInput.value); saveTheme(); });
 
     loadTheme();
 </script>
