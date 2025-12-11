@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>My Book Log</title>
+<title>Tome of Tomes</title>
 <style>
     :root {
         --primary-color: #4a90e2;
+        --site-title-color: #4a90e2; /* new variable for site title color */
         --secondary-color: #f2f2f2;
         --text-color: #333;
         --header-bg: #f2f2f2;
@@ -30,7 +31,7 @@
     h1 {
         margin: 0;
         padding: 10px 0;
-        color: var(--primary-color);
+        color: var(--site-title-color); /* uses new variable */
     }
 
     main {
@@ -188,6 +189,7 @@
     <div id="themeEditor">
         <h3>Theme Editor</h3>
         <label>Site Title: <input type="text" id="themeTitle"></label><br>
+        <label>Site Title Color: <input type="color" id="themeTitleColor"></label><br>
         <label>Form Title ("Add a Book"): <input type="text" id="themeFormTitle"></label><br>
         <label>Primary Color: <input type="color" id="themePrimary"></label><br>
         <label>Secondary Color (background): <input type="color" id="themeSecondary"></label><br>
@@ -351,6 +353,7 @@
     // ==== Theme Editor ====
     const siteTitle = document.getElementById('siteTitle');
     const themeTitleInput = document.getElementById('themeTitle');
+    const themeTitleColorInput = document.getElementById('themeTitleColor');
     const themeFormTitleInput = document.getElementById('themeFormTitle');
     const themePrimaryInput = document.getElementById('themePrimary');
     const themeSecondaryInput = document.getElementById('themeSecondary');
@@ -368,6 +371,7 @@
     function loadTheme() {
         const theme = JSON.parse(localStorage.getItem('theme')) || {};
         if(theme.title) { siteTitle.textContent = theme.title; themeTitleInput.value = theme.title; }
+        if(theme.titleColor) { document.documentElement.style.setProperty('--site-title-color', theme.titleColor); themeTitleColorInput.value = theme.titleColor; }
         if(theme.formTitle) { formTitle.textContent = theme.formTitle; themeFormTitleInput.value = theme.formTitle; }
         if(theme.primaryColor) { document.documentElement.style.setProperty('--primary-color', theme.primaryColor); themePrimaryInput.value = theme.primaryColor; }
         if(theme.secondaryColor) { document.documentElement.style.setProperty('--secondary-color', theme.secondaryColor); themeSecondaryInput.value = theme.secondaryColor; }
@@ -380,6 +384,7 @@
     function saveTheme() {
         const theme = {
             title: themeTitleInput.value,
+            titleColor: themeTitleColorInput.value,
             formTitle: themeFormTitleInput.value,
             primaryColor: themePrimaryInput.value,
             secondaryColor: themeSecondaryInput.value,
@@ -392,6 +397,7 @@
     }
 
     themeTitleInput.addEventListener('input', () => { siteTitle.textContent = themeTitleInput.value; saveTheme(); });
+    themeTitleColorInput.addEventListener('input', () => { document.documentElement.style.setProperty('--site-title-color', themeTitleColorInput.value); saveTheme(); });
     themeFormTitleInput.addEventListener('input', () => { formTitle.textContent = themeFormTitleInput.value; saveTheme(); });
     themePrimaryInput.addEventListener('input', () => { document.documentElement.style.setProperty('--primary-color', themePrimaryInput.value); saveTheme(); });
     themeSecondaryInput.addEventListener('input', () => { document.documentElement.style.setProperty('--secondary-color', themeSecondaryInput.value); saveTheme(); });
